@@ -39,4 +39,10 @@ public class CustomerController {
         return ResponseEntity.ok(customerFacade.createCustomer(customerDTO));
     }
 
+    //Borrar cliente
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+        customerFacade.deleteCustomer(id);
+        return ResponseEntity.noContent().build();
+    }
 }

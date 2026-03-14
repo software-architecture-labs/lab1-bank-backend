@@ -33,4 +33,12 @@ public class CustomerService {
         Customer customer = customerMapper.toEntity(customerDTO);
         return customerMapper.toDTO(customerRepository.save(customer));
     }
+
+    public void deleteCustomer(Long id) {
+        // Verificamos si existe antes de intentar borrar
+        if (!customerRepository.existsById(id)) {
+            throw new RuntimeException("El cliente con ID " + id + " no existe.");
+        }
+        customerRepository.deleteById(id);
+    }
 }
