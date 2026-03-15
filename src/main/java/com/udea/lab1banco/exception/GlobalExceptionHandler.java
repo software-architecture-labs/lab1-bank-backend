@@ -1,5 +1,6 @@
 package com.udea.lab1banco.exception;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@Hidden
 public class GlobalExceptionHandler {
 
     // Captura errores de validación (@Valid)
