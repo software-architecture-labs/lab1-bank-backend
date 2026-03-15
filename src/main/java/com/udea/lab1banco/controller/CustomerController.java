@@ -2,6 +2,7 @@ package com.udea.lab1banco.controller;
 
 import com.udea.lab1banco.dto.CustomerDTO;
 import com.udea.lab1banco.service.CustomerService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,12 +31,9 @@ public class CustomerController {
     }
 
     // Crear un nuevo cliente
+    // Agregamos @Valid para que Spring use las anotaciones del DTO
     @PostMapping
-    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
-        if (customerDTO.getBalance() == null) {
-            throw new IllegalArgumentException("Balance cannot be null");
-        }
-
+    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         return ResponseEntity.ok(customerFacade.createCustomer(customerDTO));
     }
 

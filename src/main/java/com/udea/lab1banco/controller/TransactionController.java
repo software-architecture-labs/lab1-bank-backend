@@ -3,6 +3,7 @@ package com.udea.lab1banco.controller;
 import com.udea.lab1banco.dto.CustomerDTO;
 import com.udea.lab1banco.dto.TransactionDTO;
 import com.udea.lab1banco.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,9 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
-
     @PostMapping
-    public ResponseEntity<?> transferMoney(@RequestBody TransactionDTO transactionDTO) {
-        try {
-            TransactionDTO savedTransaction = transactionService.transferMoney(transactionDTO);
-            return ResponseEntity.ok(savedTransaction);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<TransactionDTO> transferMoney(@Valid @RequestBody TransactionDTO transactionDTO) {
+        return ResponseEntity.ok(transactionService.transferMoney(transactionDTO));
     }
 
     @GetMapping
@@ -35,13 +30,8 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTransactionById(@PathVariable Long id) {
-        try {
-            TransactionDTO transaction = transactionService.getTransactionById(id);
-            return ResponseEntity.ok(transaction); // Devuelve 200 OK
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Devuelve 404
-        }
+    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
+        return ResponseEntity.ok(transactionService.getTransactionById(id));
     }
 
     @GetMapping("/account/{accountNumber}")
@@ -50,22 +40,13 @@ public class TransactionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateTransaction(@PathVariable Long id, @RequestBody TransactionDTO transactionDTO) {
-        try {
-            TransactionDTO updatedTransaction = transactionService.updateTransaction(id, transactionDTO);
-            return ResponseEntity.ok(updatedTransaction); // Devuelve 200 OK
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Devuelve 404
-        }
+    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable Long id, @Valid @RequestBody TransactionDTO transactionDTO) {
+        return ResponseEntity.ok(transactionService.updateTransaction(id, transactionDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTransaction(@PathVariable Long id) {
-        try {
-            transactionService.deleteTransaction(id);
-            return ResponseEntity.noContent().build(); // Devuelve 204 No Content como pide el profe
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage()); // Devuelve 404
-        }
+    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
+        transactionService.deleteTransaction(id);
+        return ResponseEntity.noContent().build();
     }
 }
