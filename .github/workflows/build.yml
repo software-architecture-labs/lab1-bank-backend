@@ -124,3 +124,19 @@ jobs:
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # ============================================================
+      #  DEPLOY EN RENDER
+      #  Render expone un Deploy Hook (URL). Al hacer POST a esa URL,
+      #  Render sabe que hay una nueva imagen en Docker Hub y
+      #  reemplaza el contenedor en ejecucion con la nueva version.
+      #
+      #  Como crear el secret RENDER_DEPLOY_HOOK:
+      #  render.com -> tu servicio -> Settings -> Deploy Hook -> copiar URL
+      #  GitHub repo -> Settings -> Secrets -> Actions -> New secret
+      #  Nombre: RENDER_DEPLOY_HOOK  |  Valor: (la URL copiada)
+      # ============================================================
+      - name: Deploy to Render
+        run: |
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+          echo "Deploy triggered on Render"
