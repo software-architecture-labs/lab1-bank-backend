@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.11</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>com.udea</groupId>
 	<artifactId>lab1banco</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>lab1banco</name>
-	<description>Demo project for Spring Boot</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<description>Demo project for Spring Boot - Banco API</description>
+
 	<properties>
 		<java.version>17</java.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
+
+		<!--
+		  ============================================================
+		  PROPIEDADES DE SONARCLOUD (Fase 4 del lab)
+		  Estas le dicen al plugin de Maven dónde está tu proyecto
+		  en SonarCloud. Deberás cambiar los valores por los de
+		  tu propia organización y proyecto en sonarcloud.io
+		  ============================================================
+		-->
+		<sonar.organization>TU_ORG_EN_SONARCLOUD</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.projectKey>TU_PROJECT_KEY_EN_SONARCLOUD</sonar.projectKey>
+
+		<!--
+		  JaCoCo necesita saber dónde está el reporte de cobertura
+		  para que SonarCloud pueda leerlo.
+		-->
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.build.directory}/site/jacoco/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
@@ -44,7 +52,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -62,44 +69,46 @@
 			<version>1.18.42</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!--
+		  spring-boot-starter-test incluye automáticamente:
+		  - JUnit 5 (el framework de pruebas)
+		  - Mockito (para simular dependencias)
+		  - AssertJ (para assertions más expresivas)
+		  scope=test significa que SOLO se incluye al correr pruebas,
+		  no en el JAR final que se despliega.
+		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct-processor</artifactId>
 			<version>${mapstruct.version}</version>
 			<scope>compile</scope>
 		</dependency>
-
-		<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
 		</dependency>
-
-		<!-- Source: https://mvnrepository.com/artifact/org.mapstruct/mapstruct-processor -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.15.4</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.6.0</version>
 		</dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -109,21 +118,19 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<annotationProcessorPaths>
-
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</path>
-
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
 							<version>${mapstruct.version}</version>
 						</path>
-
 					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -134,9 +141,62 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<!--
+					  finalName define el nombre del JAR que genera Maven.
+					  Sin esto, el JAR se llamaría "lab1banco-0.0.1-SNAPSHOT.jar"
+					  y habría que cambiar el Dockerfile cada vez que cambia la versión.
+					  Con "lab1banco" siempre será "lab1banco.jar".
+					-->
 				</configuration>
 			</plugin>
+
+			<!--
+			  ============================================================
+			  PLUGIN JACOCO (Fase 2 del lab)
+			  JaCoCo = Java Code Coverage.
+			  Mide qué porcentaje de tu código es ejecutado por los tests.
+			  Funciona como un "agente" que se adjunta a la JVM durante
+			  los tests e instrumenta el bytecode para saber qué líneas
+			  fueron ejecutadas y cuáles no.
+			  ============================================================
+			-->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.10</version>
+				<executions>
+					<!--
+					  prepare-agent: Debe ir ANTES de los tests.
+					  Configura el agente de JaCoCo para que esté listo
+					  cuando Maven ejecute "mvn test".
+					-->
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!--
+					  report: Se ejecuta durante la fase "test" de Maven.
+					  Genera el reporte en target/site/jacoco/
+					  con un index.html que puedes abrir en el navegador
+					  y un jacoco.xml que SonarCloud lee automáticamente.
+					-->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
+
+		<!--
+		  finalName: El JAR generado se llamará "lab1banco.jar"
+		  Esto simplifica el Dockerfile (no hay que poner la versión).
+		-->
+		<finalName>lab1banco</finalName>
 	</build>
 
 </project>
