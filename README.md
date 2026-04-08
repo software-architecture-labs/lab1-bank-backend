@@ -1,5 +1,5 @@
 [![CI/CD Pipeline](https://github.com/software-architecture-labs/lab1-bank-backend/actions/workflows/build.yml/badge.svg)](https://github.com/software-architecture-labs/lab1-bank-backend/actions/workflows/build.yml)
-# Banking System API - Laboratory 
+# Banking System API - Software Architecture Laboratory
 
 This repository contains a RESTful API developed with **Spring Boot** for banking operations management, focusing on customer administration and secure financial transaction processing.
 
