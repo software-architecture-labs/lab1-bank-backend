@@ -199,7 +199,7 @@
 		  finalName: El JAR generado se llamará "lab1banco.jar"
 		  Esto simplifica el Dockerfile (no hay que poner la versión).
 		-->
-		<finalName>lab1banco</finalName>
+		<finalName>lab2-2026</finalName>
 	</build>
 
 </project>
